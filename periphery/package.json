@@ -46,7 +46,7 @@
         "pretest": "yarn compile",
         "test": "mocha",
         "prepublishOnly": "yarn test",
-        "migrate": "npx truffle migrate --network ropsten"
+        "migrate": "npx truffle migrate"
     },
     "license": "GPL-3.0-or-later"
 }

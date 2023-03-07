@@ -1,17 +1,17 @@
-require('dotenv').config();
+require("dotenv").config();
 
-var HDWalletProvider = require('@truffle/hdwallet-provider');
+var HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   networks: {
     develop: {
-      host: 'localhost',
+      host: "localhost",
       port: 7545, // Match default network 'ganache'
       network_id: 5777,
       gas: 6721975, // Truffle default development block gas limit
       gasPrice: 200000000000,
       solc: {
-        version: '0.5.0',
+        version: "0.5.0",
         optimizer: {
           enabled: true,
           runs: 200,
@@ -23,18 +23,58 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           process.env.OPERATOR_PRIVATE_KEY,
-          'https://ropsten.infura.io/v3/'.concat(process.env.INFURA_PROJECT_ID)
+          "https://ropsten.infura.io/v3/".concat(process.env.INFURA_PROJECT_ID)
         );
       },
       network_id: 3,
-      gas: 7000000,
+      gas: 8000000,
+    },
+    bsctestnet: {
+      provider: () =>
+        new HDWalletProvider(
+          process.env.OPERATOR_PRIVATE_KEY,
+          `https://data-seed-prebsc-1-s1.binance.org:8545`
+        ),
+      network_id: 97,
+      confirmations: 10,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      from: 0,
     },
   },
   rpc: {
-    host: 'localhost',
+    host: "localhost",
     post: 8080,
   },
   mocha: {
     useColors: true,
+  },
+  compilers: {
+    solc: {
+      version: "0.6.6",    // Fetch exact version from solc-bin (default: truffle's version)
+      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+       optimizer: {
+         enabled: true,
+         runs: 999999
+       },
+       evmVersion: "istanbul", 
+       outputSelection: {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "evm.bytecode.object",
+            "evm.deployedBytecode.object",
+            "abi",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.sourceMap",
+            "metadata"
+          ]
+        },
+      }
+      }
+    },
   },
 };
